@@ -1,0 +1,58 @@
+.hero {
+  padding: 48rpx 32rpx;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: #fff;
+  border-bottom-left-radius: 24rpx;
+  border-bottom-right-radius: 24rpx;
+  opacity: 0;
+  transform: translateY(12rpx);
+}
+.hero-city {
+  font-size: 40rpx;
+  font-weight: 600;
+}
+.hero-sub {
+  margin-top: 8rpx;
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+.hero-temp {
+  margin-top: 8rpx;
+  font-size: 28rpx;
+}
+.gradient {
+  background: linear-gradient(135deg, #e0f7fa 0%, #fff 60%);
+}
+.chips {
+  display: flex;
+  flex-direction: row;
+  margin-top: 12rpx;
+}
+.chip {
+  background-color: #eef3f8;
+  border-radius: 999rpx;
+  padding: 8rpx 16rpx;
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}
+.hour-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 160rpx;
+  height: 140rpx;
+  margin-right: 12rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.06);
+}
+.hour {
+  font-size: 28rpx;
+  color: #333;
+}
+.temp {
+  font-size: 28rpx;
+  color: #1e88e5;
+  margin: 4rpx 0;
+}

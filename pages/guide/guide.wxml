@@ -1,0 +1,28 @@
+<view class="container">
+  <view class="card">
+    <view class="title">火灾逃生指南</view>
+    <view class="col">
+      <block wx:for="{{guides.fire}}" wx:key="*this">
+        <text style="margin-bottom: 8rpx;">• {{item}}</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">暴雨避险指南</view>
+    <view class="col">
+      <block wx:for="{{guides.rain}}" wx:key="*this">
+        <text style="margin-bottom: 8rpx;">• {{item}}</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">台风防护建议</view>
+    <view class="col">
+      <block wx:for="{{guides.typhoon}}" wx:key="*this">
+        <text style="margin-bottom: 8rpx;">• {{item}}</text>
+      </block>
+    </view>
+  </view>
+</view>

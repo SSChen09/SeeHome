@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/monitor/monitor",
+    "pages/warning/warning",
+    "pages/guide/guide",
+    "pages/user/user"
+  ],
+  "window": {
+    "navigationBarTitleText": "智守家园",
+    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#1e88e5",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#7a7e83",
+    "selectedColor": "#1e88e5",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/monitor/monitor",
+        "text": "监控"
+      },
+      {
+        "pagePath": "pages/warning/warning",
+        "text": "预警"
+      },
+      {
+        "pagePath": "pages/guide/guide",
+        "text": "指南"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的"
+      }
+    ]
+  }
+}

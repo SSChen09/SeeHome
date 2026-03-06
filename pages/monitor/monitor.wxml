@@ -1,0 +1,41 @@
+<view class="container">
+  <view class="card">
+    <view class="title">环境传感数据</view>
+    <view class="row">
+      <text>温度</text>
+      <text>{{sensor.temperature}} ℃</text>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>湿度</text>
+      <text>{{sensor.humidity}} %</text>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>烟雾浓度</text>
+      <text>{{sensor.smoke}}</text>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>燃气浓度</text>
+      <text>{{sensor.gas}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">AI风险识别</view>
+    <view class="row">
+      <text>火灾风险</text>
+      <view class="badge {{riskBadgeClass}}">{{fireRisk}}</view>
+    </view>
+    <view class="col" style="margin-top: 16rpx;">
+      <block wx:for="{{anomalies}}" wx:key="*this">
+        <view class="badge danger" style="margin-bottom: 8rpx;">{{item}}</view>
+      </block>
+      <block wx:if="{{anomalies.length === 0}}">
+        <view class="badge success">无异常</view>
+      </block>
+    </view>
+    <view class="row" style="margin-top: 16rpx;">
+      <button class="btn primary" bindtap="refresh">刷新</button>
+      <button class="btn warning" bindtap="toggleAuto">{{autoRefresh ? '停止自动' : '开启自动'}}</button>
+    </view>
+  </view>
+</view>

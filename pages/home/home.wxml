@@ -1,0 +1,64 @@
+<view class="hero" animation="{{heroAnim}}">
+  <view class="hero-city">{{weather.city}}</view>
+  <view class="hero-sub">{{currentTime}} · {{weather.condition}}</view>
+  <view class="hero-temp">{{weather.tempMin}}℃ ~ {{weather.tempMax}}℃ · 体感 {{weather.feelLike}}℃</view>
+</view>
+
+<view class="container">
+  <view class="card gradient">
+    <view class="row">
+      <view class="title">家庭安全状态</view>
+      <view class="badge {{riskBadgeClass}}">{{fireRisk}}</view>
+    </view>
+    <view class="chips">
+      <view class="chip">温 {{sensor.temperature}}℃</view>
+      <view class="chip">湿 {{sensor.humidity}}%</view>
+      <view class="chip">烟 {{sensor.smoke}}</view>
+      <view class="chip">气 {{sensor.gas}}</view>
+    </view>
+    <view class="row" style="margin-top: 16rpx;">
+      <button class="btn primary" bindtap="goMonitor">查看监控</button>
+      <button class="btn warning" bindtap="refresh">刷新</button>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">本地天气概览</view>
+    <view class="row"><text>风力</text><text>{{weather.wind}} · {{weather.windSpeed}}m/s</text></view>
+    <view class="row" style="margin-top: 12rpx;"><text>空气质量AQI</text><view class="badge {{aqiBadge}}">{{weather.aqi}}</view></view>
+    <view class="row" style="margin-top: 12rpx;"><text>紫外线UV</text><view class="badge {{uvBadge}}">{{weather.uv}}</view></view>
+    <block wx:if="{{weather.alerts.length}}">
+      <view class="row" style="margin-top: 12rpx;"><text>预警</text><text style="color:#e53935;">{{weather.alerts.join('、')}}</text></view>
+    </block>
+  </view>
+
+  <view class="card">
+    <view class="title">小时级预报</view>
+    <scroll-view scroll-x="true" style="white-space:nowrap;">
+      <block wx:for="{{hourly.items}}" wx:key="hour">
+        <view class="hour-item">
+          <text class="hour">{{item.hour}}</text>
+          <text class="temp">{{item.temp}}℃</text>
+          <view class="badge {{badgeClass(item.risk)}}">{{item.risk}}</view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+
+  <view class="card">
+    <view class="title">本地创新风险指数</view>
+    <view class="row"><text>极端降雨指数</text><view class="badge {{meterClass(innovation.extremeRainIndex)}}">{{innovation.extremeRainIndex}}</view></view>
+    <view class="row" style="margin-top:12rpx;"><text>热浪健康风险</text><view class="badge {{meterClass(innovation.heatRiskIndex)}}">{{innovation.heatRiskIndex}}</view></view>
+    <view class="row" style="margin-top:12rpx;"><text>城市排水压力</text><view class="badge {{meterClass(innovation.urbanDrainageRisk)}}">{{innovation.urbanDrainageRisk}}</view></view>
+    <view class="row" style="margin-top:12rpx;"><text>雷电活动风险</text><view class="badge {{meterClass(innovation.lightningRisk)}}">{{innovation.lightningRisk}}</view></view>
+  </view>
+
+  <view class="card">
+    <view class="title">行动建议</view>
+    <view class="col">
+      <block wx:for="{{suggestions}}" wx:key="*this">
+        <text style="margin-bottom: 8rpx;">• {{item}}</text>
+      </block>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,63 @@
+<view class="container">
+  <view class="card">
+    <view class="title">设备管理</view>
+    <view class="row" style="margin-bottom: 12rpx;">
+      <input placeholder="设备名称" value="{{newDeviceName}}" bindinput="onDeviceNameInput" style="flex:1;border:1px solid #ddd;border-radius:8rpx;padding:12rpx;" />
+      <button class="btn primary" style="margin-left:12rpx;" bindtap="addDevice">添加</button>
+    </view>
+    <view class="col">
+      <block wx:for="{{devices}}" wx:key="id">
+        <view class="row" style="margin-bottom: 8rpx;">
+          <text>{{item.name}} · {{item.type}}</text>
+          <text style="color:#888;">#{{item.id}}</text>
+        </view>
+      </block>
+      <block wx:if="{{devices.length === 0}}">
+        <text>暂无设备</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">定位与城市</view>
+    <view class="row">
+      <text>自动定位</text>
+      <switch checked="{{cityPref.auto}}" bindchange="onAutoLocateChange" />
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <input placeholder="城市（如：北京）" value="{{cityPref.city}}" bindinput="onCityInput" style="flex:1;border:1px solid #ddd;border-radius:8rpx;padding:12rpx;" />
+      <button class="btn warning" style="margin-left:12rpx;" bindtap="saveCityPref">保存</button>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">历史记录</view>
+    <view class="col">
+      <block wx:for="{{history}}" wx:key="time">
+        <view class="row" style="margin-bottom: 8rpx;">
+          <text>{{formatTime(item.time)}}</text>
+          <text>{{item.type}} · {{item.detail}}</text>
+        </view>
+      </block>
+      <block wx:if="{{history.length === 0}}">
+        <text>暂无记录</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">提醒设置</view>
+    <view class="row">
+      <text>方式</text>
+      <picker mode="selector" range="{{methods}}" value="{{methodIndex}}" bindchange="onMethodChange">
+        <view class="badge warning">{{notify.method}}</view>
+      </picker>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>阈值等级</text>
+      <picker mode="selector" range="{{levels}}" value="{{levelIndex}}" bindchange="onLevelChange">
+        <view class="badge warning">{{notify.level}}</view>
+      </picker>
+    </view>
+  </view>
+</view>

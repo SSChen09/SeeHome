@@ -1,0 +1,49 @@
+<view class="container">
+  <view class="card">
+    <view class="title">灾害风险概览</view>
+    <view class="row">
+      <text>暴雨</text>
+      <view class="badge {{badgeClass(risk.rain)}}">{{risk.rain}}</view>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>台风</text>
+      <view class="badge {{badgeClass(risk.typhoon)}}">{{risk.typhoon}}</view>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>洪水</text>
+      <view class="badge {{badgeClass(risk.flood)}}">{{risk.flood}}</view>
+    </view>
+    <button class="btn primary" style="margin-top: 16rpx;" bindtap="refresh">刷新</button>
+  </view>
+
+  <view class="card">
+    <view class="title">建议</view>
+    <view class="col">
+      <block wx:if="{{risk.rain === '高'}}">
+        <text>未来24小时暴雨风险高，建议减少外出。</text>
+      </block>
+      <block wx:if="{{risk.typhoon === '高'}}">
+        <text>台风风险高，检查门窗加固与应急物资。</text>
+      </block>
+      <block wx:if="{{risk.flood === '高'}}">
+        <text>洪水风险高，避免前往低洼地区与地下空间。</text>
+      </block>
+      <block wx:if="{{risk.rain !== '高' && risk.typhoon !== '高' && risk.flood !== '高'}}">
+        <text>当前总体风险较低，保持关注。</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">24小时风险时间线</view>
+    <scroll-view scroll-x="true" style="white-space:nowrap;">
+      <block wx:for="{{hourly.items}}" wx:key="hour">
+        <view class="hour-item">
+          <text class="hour">{{item.hour}}</text>
+          <view class="badge {{badgeClass(item.risk)}}">{{item.risk}}</view>
+          <text style="font-size:24rpx;color:#666;">降雨概率 {{item.rainProb}}%</text>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+</view>
