@@ -1,8 +1,12 @@
-<nav-bar title="智守家园" themeClass="{{themeClass}}" accentClass="{{accentClass}}" bind:refresh="refresh" bind:bell="goWarning" bind:settings="goUser" />
+<nav-bar title="智守家园" themeClass="{{themeClass}}" accentClass="{{accentClass}}" bind:refresh="manualRefresh" bind:bell="goWarning" bind:settings="goUser" />
 <view class="hero" animation="{{heroAnim}}">
   <view class="hero-city">{{weather.city}}</view>
   <view class="hero-sub">{{currentTime}} · {{weather.condition}}</view>
   <view class="hero-temp">{{weather.tempMin}}℃ ~ {{weather.tempMax}}℃ · 体感 {{weather.feelLike}}℃</view>
+  <view class="hero-sub" style="margin-top: 8rpx; font-size: 24rpx; opacity: 0.7;">
+    最后更新: {{lastRefreshTime}}
+    <text wx:if="{{refreshing}}" style="margin-left: 16rpx;">🔄 刷新中...</text>
+  </view>
 </view>
 
 <view class="container {{themeClass}} {{accentClass}}">
@@ -27,7 +31,9 @@
     </view>
     <view class="row" style="margin-top: 16rpx;">
       <button class="btn primary" bindtap="goMonitor">查看监控</button>
-      <button class="btn warning" bindtap="refresh">刷新</button>
+      <button class="btn warning" bindtap="manualRefresh" disabled="{{refreshing}}">
+        {{refreshing ? '刷新中...' : '刷新'}}
+      </button>
     </view>
   </view>
 

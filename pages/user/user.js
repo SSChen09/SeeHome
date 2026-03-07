@@ -1,5 +1,5 @@
 const api = require('../../utils/api')
-const { getCityPreference, setCityPreference, getPublicIP, getCityByIP, getFavoriteCities, addFavoriteCity, removeFavoriteCity } = require('../../utils/location')
+const { getCityPreference, setCityPreference, getFavoriteCities, addFavoriteCity, removeFavoriteCity } = require('../../utils/location')
 const { getThemePreference, setThemePreference, getThemeClasses, applyNavColor } = require('../../utils/theme')
 
 Page({
@@ -13,8 +13,6 @@ Page({
     methodIndex: 0,
     levelIndex: 1,
     cityPref: { auto: true, city: '' },
-    currentIP: '',
-    cityByIP: '',
     themes: ['亮色', '暗色'],
     accents: ['蓝色', '琥珀', '绿色'],
     themeIndex: 0,
@@ -52,8 +50,6 @@ Page({
     const methodIndex = this.data.methods.indexOf(notify.method)
     const levelIndex = this.data.levels.indexOf(notify.level)
     const cityPref = getCityPreference()
-    const currentIP = await getPublicIP().catch(() => '')
-    const cityByIP = await getCityByIP().catch(() => '')
     const themePref = getThemePreference()
     const themeIndex = themePref.theme === 'dark' ? 1 : 0
     const accentIndex = themePref.accent === 'amber' ? 1 : themePref.accent === 'green' ? 2 : 0
@@ -70,7 +66,7 @@ Page({
       typhoon: this.data.levels.indexOf(thresholds.typhoon),
       flood: this.data.levels.indexOf(thresholds.flood)
     }
-    this.setData({ devices, history, notify, methodIndex, levelIndex, cityPref, currentIP, cityByIP, themeIndex, accentIndex, themeLabel, accentLabel, themeClass: cls.themeClass, accentClass: cls.accentClass, favorites, profile, quietStart, quietEnd, thresholdIndices })
+    this.setData({ devices, history, notify, methodIndex, levelIndex, cityPref, themeIndex, accentIndex, themeLabel, accentLabel, themeClass: cls.themeClass, accentClass: cls.accentClass, favorites, profile, quietStart, quietEnd, thresholdIndices })
   },
   onDeviceNameInput(e) {
     this.setData({ newDeviceName: e.detail.value })
@@ -171,11 +167,6 @@ Page({
     const next = { ...this.data.notify, thresholds: t }
     this.setData({ notify: next, thresholdIndices: { ...this.data.thresholdIndices, flood: idx } })
     api.setNotifyPreference(next)
-  },
-  async refreshIP() {
-    const currentIP = await getPublicIP().catch(() => '')
-    const cityByIP = await getCityByIP().catch(() => '')
-    this.setData({ currentIP, cityByIP })
     wx.showToast({ title: '已更新', icon: 'success' })
   },
   onThemeChange(e) {

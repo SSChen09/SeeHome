@@ -20,9 +20,13 @@ Page({
     aqiBadge: 'success badge',
     uvBadge: 'success badge',
     suggestions: [],
-    heroAnim: {}
+    heroAnim: {},
+    refreshing: false,
+    lastRefreshTime: '',
+    refreshTimer: null
   },
   onLoad() {
+    this.startAutoRefresh()
     this.refresh()
   },
   onShow() {
@@ -38,46 +42,109 @@ Page({
     const { getFavoriteCities } = require('../../utils/location')
     const favorites = getFavoriteCities()
     this.setData({ favorites })
+    
+    // 页面显示时也刷新一次数据
+    this.refresh()
+  },
+  onHide() {
+    this.stopAutoRefresh()
+  },
+  onUnload() {
+    this.stopAutoRefresh()
+  },
+  onPullDownRefresh() {
+    this.manualRefresh()
   },
   async refresh() {
-    const prefCity = await getCityAuto()
-    const city = this.data.selectedCity || prefCity
-    const sensor = await api.getSensorLatest()
-    const fireRisk = computeFireRisk(sensor)
-    const weather = await api.getWeatherToday(city)
-    const risk = await api.getDisasterRisk()
-    const hourly = await api.getHourlyForecast(city)
-    const innovation = await api.getLocalInnovationIndices(city)
-    const rainBadgeClass = this.badgeClass(risk.rain)
-    const typhoonBadgeClass = this.badgeClass(risk.typhoon)
-    const floodBadgeClass = this.badgeClass(risk.flood)
-    const hourlyWithClass = { items: (hourly.items || []).map(it => ({ ...it, riskClass: this.badgeClass(it.risk) })) }
-    const trendBars = (hourly.items || []).map(it => ({
-      height: Math.round((it.rainProb || 0) * 1.0 + 10),
-      cls: this.trendClass(it.risk)
-    }))
-    this.setData({
-      currentTime: this.nowStr(),
-      sensor,
-      fireRisk,
-      riskBadgeClass: this.badgeClass(fireRisk),
-      weather,
-      risk,
-      hourly: hourlyWithClass,
-      trendBars,
-      innovation,
-      aqiBadge: this.meterClass(weather.aqi),
-      uvBadge: this.meterClass(weather.uv),
-      suggestions: this.buildSuggestions(weather, risk, fireRisk, innovation),
-      rainBadgeClass,
-      typhoonBadgeClass,
-      floodBadgeClass,
-      extremeRainClass: this.meterClass(innovation.extremeRainIndex),
-      heatRiskClass: this.meterClass(innovation.heatRiskIndex),
-      urbanDrainageClass: this.meterClass(innovation.urbanDrainageRisk),
-      lightningClass: this.meterClass(innovation.lightningRisk)
-    })
-    this.playHeroAnim()
+    try {
+      const prefCity = await getCityAuto()
+      const city = this.data.selectedCity || prefCity
+      const sensor = await api.getSensorLatest()
+      const fireRisk = computeFireRisk(sensor)
+      const weather = await api.getWeatherToday(city)
+      const risk = await api.getDisasterRisk()
+      const hourly = await api.getHourlyForecast(city)
+      const innovation = await api.getLocalInnovationIndices(city)
+      const rainBadgeClass = this.badgeClass(risk.rain)
+      const typhoonBadgeClass = this.badgeClass(risk.typhoon)
+      const floodBadgeClass = this.badgeClass(risk.flood)
+      const hourlyWithClass = { items: (hourly.items || []).map(it => ({ ...it, riskClass: this.badgeClass(it.risk) })) }
+      const trendBars = (hourly.items || []).map(it => ({
+        height: Math.round((it.rainProb || 0) * 1.0 + 10),
+        cls: this.trendClass(it.risk)
+      }))
+      this.setData({
+        currentTime: this.nowStr(),
+        sensor,
+        fireRisk,
+        riskBadgeClass: this.badgeClass(fireRisk),
+        weather,
+        risk,
+        hourly: hourlyWithClass,
+        trendBars,
+        innovation,
+        aqiBadge: this.meterClass(weather.aqi),
+        uvBadge: this.meterClass(weather.uv),
+        suggestions: this.buildSuggestions(weather, risk, fireRisk, innovation),
+        rainBadgeClass,
+        typhoonBadgeClass,
+        floodBadgeClass,
+        extremeRainClass: this.meterClass(innovation.extremeRainIndex),
+        heatRiskClass: this.meterClass(innovation.heatRiskIndex),
+        urbanDrainageClass: this.meterClass(innovation.urbanDrainageRisk),
+        lightningClass: this.meterClass(innovation.lightningRisk),
+        lastRefreshTime: this.nowStr(),
+        refreshing: false
+      })
+      this.playHeroAnim()
+    } catch (error) {
+      console.error('刷新数据失败:', error)
+      wx.showToast({
+        title: '刷新失败',
+        icon: 'error',
+        duration: 2000
+      })
+      this.setData({ refreshing: false })
+    }
+  },
+  
+  async manualRefresh() {
+    if (this.data.refreshing) return
+    
+    this.setData({ refreshing: true })
+    wx.showLoading({ title: '刷新中...' })
+    
+    try {
+      await this.refresh()
+      wx.showToast({
+        title: '刷新成功',
+        icon: 'success',
+        duration: 1500
+      })
+    } catch (error) {
+      console.error('手动刷新失败:', error)
+    } finally {
+      wx.hideLoading()
+      wx.stopPullDownRefresh()
+    }
+  },
+  
+  startAutoRefresh() {
+    // 停止之前的定时器
+    this.stopAutoRefresh()
+    
+    // 每5分钟自动刷新一次
+    this.data.refreshTimer = setInterval(() => {
+      console.log('自动刷新数据...')
+      this.refresh()
+    }, 5 * 60 * 1000) // 5分钟
+  },
+  
+  stopAutoRefresh() {
+    if (this.data.refreshTimer) {
+      clearInterval(this.data.refreshTimer)
+      this.data.refreshTimer = null
+    }
   },
   selectCity(e) {
     const city = e.currentTarget.dataset.city

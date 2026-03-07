@@ -37,5 +37,13 @@
         "text": "我的"
       }
     ]
-  }
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于获取当地天气和灾害预警"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ]
 }
