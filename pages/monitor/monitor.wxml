@@ -1,4 +1,5 @@
-<view class="container">
+<nav-bar title="环境监控" themeClass="{{themeClass}}" accentClass="{{accentClass}}" bind:refresh="refresh" bind:settings="goUser" />
+<view class="container {{themeClass}} {{accentClass}}">
   <view class="card">
     <view class="title">环境传感数据</view>
     <view class="row">
@@ -16,6 +17,28 @@
     <view class="row" style="margin-top: 12rpx;">
       <text>燃气浓度</text>
       <text>{{sensor.gas}}</text>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">数据图表</view>
+    <view class="subtitle">温度变化</view>
+    <view class="trend" style="margin-bottom:12rpx;">
+      <block wx:for="{{charts.temp}}" wx:key="*this">
+        <view class="bar success" style="height: {{item}}rpx;"></view>
+      </block>
+    </view>
+    <view class="subtitle">烟雾变化</view>
+    <view class="trend" style="margin-bottom:12rpx;">
+      <block wx:for="{{charts.smoke}}" wx:key="*this">
+        <view class="bar warning" style="height: {{item}}rpx;"></view>
+      </block>
+    </view>
+    <view class="subtitle">燃气变化</view>
+    <view class="trend">
+      <block wx:for="{{charts.gas}}" wx:key="*this">
+        <view class="bar danger" style="height: {{item}}rpx;"></view>
+      </block>
     </view>
   </view>
 

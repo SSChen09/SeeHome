@@ -1,10 +1,19 @@
+<nav-bar title="智守家园" themeClass="{{themeClass}}" accentClass="{{accentClass}}" bind:refresh="refresh" bind:bell="goWarning" bind:settings="goUser" />
 <view class="hero" animation="{{heroAnim}}">
   <view class="hero-city">{{weather.city}}</view>
   <view class="hero-sub">{{currentTime}} · {{weather.condition}}</view>
   <view class="hero-temp">{{weather.tempMin}}℃ ~ {{weather.tempMax}}℃ · 体感 {{weather.feelLike}}℃</view>
 </view>
 
-<view class="container">
+<view class="container {{themeClass}} {{accentClass}}">
+  <view class="card">
+    <view class="title">收藏城市</view>
+    <scroll-view scroll-x="true" style="white-space:nowrap;">
+      <block wx:for="{{favorites}}" wx:key="*this">
+        <view class="chip" style="display:inline-flex;" data-city="{{item}}" bindtap="selectCity">{{item}}</view>
+      </block>
+    </scroll-view>
+  </view>
   <view class="card gradient">
     <view class="row">
       <view class="title">家庭安全状态</view>
@@ -23,6 +32,21 @@
   </view>
 
   <view class="card">
+    <view class="title">AI风险提示</view>
+    <view class="row"><text>暴雨风险</text><view class="badge {{rainBadgeClass}}">{{risk.rain}}</view></view>
+    <view class="row" style="margin-top:12rpx;"><text>台风风险</text><view class="badge {{typhoonBadgeClass}}">{{risk.typhoon}}</view></view>
+    <view class="row" style="margin-top:12rpx;"><text>洪水风险</text><view class="badge {{floodBadgeClass}}">{{risk.flood}}</view></view>
+  </view>
+
+  <view class="card">
+    <view class="title">快捷功能入口</view>
+    <view class="row">
+      <button class="btn primary btn-sm" bindtap="goMonitor">安全监控</button>
+      <button class="btn warning btn-sm" bindtap="goWarning">灾害预警</button>
+      <button class="btn success btn-sm" bindtap="goGuide">应急指南</button>
+    </view>
+  </view>
+  <view class="card">
     <view class="title">本地天气概览</view>
     <view class="row"><text>风力</text><text>{{weather.wind}} · {{weather.windSpeed}}m/s</text></view>
     <view class="row" style="margin-top: 12rpx;"><text>空气质量AQI</text><view class="badge {{aqiBadge}}">{{weather.aqi}}</view></view>
@@ -39,18 +63,27 @@
         <view class="hour-item">
           <text class="hour">{{item.hour}}</text>
           <text class="temp">{{item.temp}}℃</text>
-          <view class="badge {{badgeClass(item.risk)}}">{{item.risk}}</view>
+          <view class="badge {{item.riskClass}}">{{item.risk}}</view>
         </view>
       </block>
     </scroll-view>
   </view>
 
   <view class="card">
+    <view class="title">风险趋势</view>
+    <view class="trend">
+      <block wx:for="{{trendBars}}" wx:key="*this">
+        <view class="bar {{item.cls}}" style="height: {{item.height}}rpx;"></view>
+      </block>
+    </view>
+  </view>
+
+  <view class="card">
     <view class="title">本地创新风险指数</view>
-    <view class="row"><text>极端降雨指数</text><view class="badge {{meterClass(innovation.extremeRainIndex)}}">{{innovation.extremeRainIndex}}</view></view>
-    <view class="row" style="margin-top:12rpx;"><text>热浪健康风险</text><view class="badge {{meterClass(innovation.heatRiskIndex)}}">{{innovation.heatRiskIndex}}</view></view>
-    <view class="row" style="margin-top:12rpx;"><text>城市排水压力</text><view class="badge {{meterClass(innovation.urbanDrainageRisk)}}">{{innovation.urbanDrainageRisk}}</view></view>
-    <view class="row" style="margin-top:12rpx;"><text>雷电活动风险</text><view class="badge {{meterClass(innovation.lightningRisk)}}">{{innovation.lightningRisk}}</view></view>
+    <view class="row"><text>极端降雨指数</text><view class="badge {{extremeRainClass}}">{{innovation.extremeRainIndex}}</view></view>
+    <view class="row" style="margin-top:12rpx;"><text>热浪健康风险</text><view class="badge {{heatRiskClass}}">{{innovation.heatRiskIndex}}</view></view>
+    <view class="row" style="margin-top:12rpx;"><text>城市排水压力</text><view class="badge {{urbanDrainageClass}}">{{innovation.urbanDrainageRisk}}</view></view>
+    <view class="row" style="margin-top:12rpx;"><text>雷电活动风险</text><view class="badge {{lightningClass}}">{{innovation.lightningRisk}}</view></view>
   </view>
 
   <view class="card">

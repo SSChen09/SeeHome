@@ -1,0 +1,17 @@
+<view class="nav {{themeClass}} {{accentClass}}" style="padding-top: {{statusBarHeight}}px; height: {{navTotalHeight}}px;">
+  <view class="left">
+    <text class="logo">🏠</text>
+    <text class="title">{{title}}</text>
+  </view>
+  <view class="right">
+    <block wx:if="{{showBell}}">
+      <text class="icon" bindtap="onBell">🔔</text>
+    </block>
+    <block wx:if="{{showRefresh}}">
+      <text class="icon" bindtap="onRefresh">🔄</text>
+    </block>
+    <block wx:if="{{showSettings}}">
+      <text class="icon" bindtap="onSettings">⚙️</text>
+    </block>
+  </view>
+</view>

@@ -10,6 +10,7 @@
     "navigationBarTitleText": "智守家园",
     "navigationBarTextStyle": "white",
     "navigationBarBackgroundColor": "#1e88e5",
+    "navigationStyle": "custom",
     "backgroundTextStyle": "light"
   },
   "tabBar": {
@@ -17,6 +18,7 @@
     "selectedColor": "#1e88e5",
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
+    "custom": true,
     "list": [
       {
         "pagePath": "pages/home/home",
@@ -29,10 +31,6 @@
       {
         "pagePath": "pages/warning/warning",
         "text": "预警"
-      },
-      {
-        "pagePath": "pages/guide/guide",
-        "text": "指南"
       },
       {
         "pagePath": "pages/user/user",

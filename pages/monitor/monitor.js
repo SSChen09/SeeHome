@@ -1,5 +1,6 @@
-import { getSensorLatest, addHistoryLog } from '../../utils/api'
-import { computeFireRisk, detectAnomalies } from '../../utils/risk'
+const api = require('../../utils/api')
+const { computeFireRisk, detectAnomalies } = require('../../utils/risk')
+const { getThemeClasses } = require('../../utils/theme')
 
 let timer = null
 
@@ -8,11 +9,24 @@ Page({
     sensor: { temperature: 0, humidity: 0, smoke: 0, gas: 0 },
     fireRisk: '低',
     riskBadgeClass: 'success badge',
+    themeClass: '',
+    accentClass: '',
     anomalies: [],
     autoRefresh: false
   },
   onLoad() {
     this.refresh()
+  },
+  onShow() {
+    const cls = getThemeClasses()
+    this.setData({ themeClass: cls.themeClass, accentClass: cls.accentClass })
+    if (this.getTabBar) {
+      const tab = this.getTabBar()
+      if (tab && typeof tab.updateSelected === 'function') {
+        tab.updateSelected()
+        tab.setData({ themeClass: cls.themeClass, accentClass: cls.accentClass })
+      }
+    }
   },
   onUnload() {
     if (timer) {
@@ -21,17 +35,23 @@ Page({
     }
   },
   async refresh() {
-    const sensor = await getSensorLatest()
+    const sensor = await api.getSensorLatest()
     const fireRisk = computeFireRisk(sensor)
     const anomalies = detectAnomalies(sensor)
+    const charts = {
+      temp: Array.from({ length: 12 }, () => Math.round(40 + Math.random() * 60)),
+      smoke: Array.from({ length: 12 }, () => Math.round(20 + Math.random() * 50)),
+      gas: Array.from({ length: 12 }, () => Math.round(20 + Math.random() * 60))
+    }
     this.setData({
       sensor,
       fireRisk,
       riskBadgeClass: this.badgeClass(fireRisk),
-      anomalies
+      anomalies,
+      charts
     })
     if (anomalies.length > 0) {
-      await addHistoryLog({ type: '异常提醒', detail: anomalies.join('、') })
+      await api.addHistoryLog({ type: '异常提醒', detail: anomalies.join('、') })
       wx.showToast({ title: '发现异常', icon: 'error' })
     }
   },

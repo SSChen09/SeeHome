@@ -1,17 +1,26 @@
-<view class="container">
+<nav-bar title="灾害预警" themeClass="{{themeClass}}" accentClass="{{accentClass}}" bind:refresh="refresh" bind:settings="goUser" />
+<view class="container {{themeClass}} {{accentClass}}">
+  <view class="card">
+    <view class="title">收藏城市</view>
+    <scroll-view scroll-x="true" style="white-space:nowrap;">
+      <block wx:for="{{favorites}}" wx:key="*this">
+        <view class="chip" style="display:inline-flex;" data-city="{{item}}" bindtap="selectCity">{{item}}</view>
+      </block>
+    </scroll-view>
+  </view>
   <view class="card">
     <view class="title">灾害风险概览</view>
     <view class="row">
       <text>暴雨</text>
-      <view class="badge {{badgeClass(risk.rain)}}">{{risk.rain}}</view>
+      <view class="badge {{rainBadgeClass}}">{{risk.rain}}</view>
     </view>
     <view class="row" style="margin-top: 12rpx;">
       <text>台风</text>
-      <view class="badge {{badgeClass(risk.typhoon)}}">{{risk.typhoon}}</view>
+      <view class="badge {{typhoonBadgeClass}}">{{risk.typhoon}}</view>
     </view>
     <view class="row" style="margin-top: 12rpx;">
       <text>洪水</text>
-      <view class="badge {{badgeClass(risk.flood)}}">{{risk.flood}}</view>
+      <view class="badge {{floodBadgeClass}}">{{risk.flood}}</view>
     </view>
     <button class="btn primary" style="margin-top: 16rpx;" bindtap="refresh">刷新</button>
   </view>
@@ -40,10 +49,42 @@
       <block wx:for="{{hourly.items}}" wx:key="hour">
         <view class="hour-item">
           <text class="hour">{{item.hour}}</text>
-          <view class="badge {{badgeClass(item.risk)}}">{{item.risk}}</view>
+          <view class="badge {{item.riskClass}}">{{item.risk}}</view>
           <text style="font-size:24rpx;color:#666;">降雨概率 {{item.rainProb}}%</text>
         </view>
       </block>
     </scroll-view>
+  </view>
+
+  <view class="card">
+    <view class="title">风险趋势</view>
+    <view class="trend">
+      <block wx:for="{{trendBars}}" wx:key="*this">
+        <view class="bar {{item.cls}}" style="height: {{item.height}}rpx;"></view>
+      </block>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="row">
+      <view class="title">预警历史记录</view>
+      <button class="btn warning btn-sm" bindtap="onClearHistory">清空历史</button>
+    </view>
+    <block wx:if="{{history.length}}">
+      <swiper indicator-dots="true" style="height: 160rpx; margin-top: 12rpx;">
+        <block wx:for="{{history}}" wx:key="time">
+          <swiper-item>
+            <view style="padding: 12rpx;">
+              <view class="row"><text>时间</text><text>{{formatTime(item.time)}}</text></view>
+              <view class="row" style="margin-top: 12rpx;"><text>类型</text><view class="badge">{{item.type}}</view></view>
+              <view class="row" style="margin-top: 12rpx;"><text>详情</text><text style="flex:1;">{{item.detail}}</text></view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </block>
+    <block wx:if="{{!history.length}}">
+      <view class="badge success" style="margin-top: 12rpx;">暂无历史记录</view>
+    </block>
   </view>
 </view>

@@ -1,0 +1,30 @@
+.nav {
+  height: 100rpx;
+  padding: 0 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.06);
+}
+.left {
+  display: flex;
+  align-items: center;
+}
+.logo {
+  font-size: 36rpx;
+  margin-right: 12rpx;
+}
+.title {
+  font-size: 32rpx;
+  font-weight: 600;
+}
+.right .icon {
+  font-size: 36rpx;
+  margin-left: 16rpx;
+}
+.theme-dark .nav {
+  background-color: #14171a;
+  color: #eaeef4;
+  box-shadow: none;
+}

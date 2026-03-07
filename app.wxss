@@ -56,7 +56,70 @@ page {
   border-radius: 12rpx;
   margin-top: 12rpx;
 }
+.btn-sm {
+  padding: 10rpx 16rpx;
+  font-size: 24rpx;
+}
 
 .hero {
   /* override in page */
+}
+
+.theme-dark page {
+  background-color: #0f1114;
+}
+.theme-dark .card {
+  background-color: #14171a;
+  color: #eaeef4;
+  box-shadow: none;
+}
+.container {
+  padding-bottom: 140rpx;
+}
+.theme-dark .title {
+  color: #eaeef4;
+}
+.chip {
+  background-color: #eef3f8;
+  border-radius: 999rpx;
+  padding: 8rpx 16rpx;
+  margin-right: 8rpx;
+  font-size: 24rpx;
+}
+.chips {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.trend {
+  display: flex;
+  align-items: flex-end;
+  height: 120rpx;
+}
+.trend .bar {
+  width: 16rpx;
+  border-radius: 8rpx;
+  margin-right: 8rpx;
+  background-color: #7a7e83;
+}
+.trend .bar.success {
+  background-color: #43a047;
+}
+.trend .bar.warning {
+  background-color: #fbc02d;
+}
+.trend .bar.danger {
+  background-color: #e53935;
+}
+.accent-blue .primary {
+  background-color: #1e88e5;
+  color: #fff;
+}
+.accent-amber .primary {
+  background-color: #fb8c00;
+  color: #fff;
+}
+.accent-green .primary {
+  background-color: #43a047;
+  color: #fff;
 }

@@ -1,4 +1,17 @@
-<view class="container">
+<nav-bar title="我的" themeClass="{{themeClass}}" accentClass="{{accentClass}}" />
+<view class="container {{themeClass}} {{accentClass}}">
+  <view class="card">
+    <view class="title">用户信息</view>
+    <view class="row">
+      <text>昵称</text>
+      <input placeholder="请输入昵称" value="{{profile.nickname}}" bindinput="onNicknameInput" style="flex:1;border:1px solid #ddd;border-radius:8rpx;padding:12rpx;" />
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>版本</text>
+      <text>{{version}}</text>
+    </view>
+    <button class="btn primary btn-sm" style="margin-top: 12rpx;" bindtap="saveProfile">保存</button>
+  </view>
   <view class="card">
     <view class="title">设备管理</view>
     <view class="row" style="margin-bottom: 12rpx;">
@@ -28,6 +41,48 @@
       <input placeholder="城市（如：北京）" value="{{cityPref.city}}" bindinput="onCityInput" style="flex:1;border:1px solid #ddd;border-radius:8rpx;padding:12rpx;" />
       <button class="btn warning" style="margin-left:12rpx;" bindtap="saveCityPref">保存</button>
     </view>
+    <view class="subtitle" style="margin-top: 16rpx;">收藏城市</view>
+    <view class="row" style="margin-top: 12rpx;">
+      <input placeholder="城市（如：上海）" value="{{newFavCity}}" bindinput="onFavCityInput" style="flex:1;border:1px solid #ddd;border-radius:8rpx;padding:12rpx;" />
+      <button class="btn primary btn-sm" style="margin-left:12rpx;" bindtap="addFavCity">添加</button>
+    </view>
+    <scroll-view scroll-x="true" style="white-space:nowrap;margin-top:12rpx;">
+      <block wx:for="{{favorites}}" wx:key="*this">
+        <view class="chip" style="display:inline-flex;align-items:center;">
+          <text>{{item}}</text>
+          <text data-city="{{item}}" bindtap="removeFavCity" style="margin-left:8rpx;color:#e53935;">✕</text>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+
+  <view class="card">
+    <view class="title">主题设置</view>
+    <view class="row">
+      <text>主题</text>
+      <picker mode="selector" range="{{themes}}" value="{{themeIndex}}" bindchange="onThemeChange">
+        <view class="badge warning">{{themeLabel}}</view>
+      </picker>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>主色</text>
+      <picker mode="selector" range="{{accents}}" value="{{accentIndex}}" bindchange="onAccentChange">
+        <view class="badge warning">{{accentLabel}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">网络信息</view>
+    <view class="row">
+      <text>公网IP</text>
+      <text>{{currentIP || '获取中...'}}</text>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>IP定位城市</text>
+      <text>{{cityByIP || '获取中...'}}</text>
+    </view>
+    <button class="btn primary" style="margin-top: 12rpx;" bindtap="refreshIP">刷新IP</button>
   </view>
 
   <view class="card">
@@ -57,6 +112,36 @@
       <text>阈值等级</text>
       <picker mode="selector" range="{{levels}}" value="{{levelIndex}}" bindchange="onLevelChange">
         <view class="badge warning">{{notify.level}}</view>
+      </picker>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>暴雨提醒阈值</text>
+      <picker mode="selector" range="{{levels}}" value="{{thresholdIndices.rain}}" bindchange="onRainThresholdChange">
+        <view class="badge warning">{{levels[thresholdIndices.rain]}}</view>
+      </picker>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>台风提醒阈值</text>
+      <picker mode="selector" range="{{levels}}" value="{{thresholdIndices.typhoon}}" bindchange="onTyphoonThresholdChange">
+        <view class="badge warning">{{levels[thresholdIndices.typhoon]}}</view>
+      </picker>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>洪水提醒阈值</text>
+      <picker mode="selector" range="{{levels}}" value="{{thresholdIndices.flood}}" bindchange="onFloodThresholdChange">
+        <view class="badge warning">{{levels[thresholdIndices.flood]}}</view>
+      </picker>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>免打扰开始</text>
+      <picker mode="time" value="{{quietStart}}" bindchange="onQuietStartChange">
+        <view class="badge warning">{{quietStart}}</view>
+      </picker>
+    </view>
+    <view class="row" style="margin-top: 12rpx;">
+      <text>免打扰结束</text>
+      <picker mode="time" value="{{quietEnd}}" bindchange="onQuietEndChange">
+        <view class="badge warning">{{quietEnd}}</view>
       </picker>
     </view>
   </view>

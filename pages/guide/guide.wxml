@@ -1,4 +1,5 @@
-<view class="container">
+<nav-bar title="应急指南" themeClass="{{themeClass}}" accentClass="{{accentClass}}" />
+<view class="container {{themeClass}} {{accentClass}}">
   <view class="card">
     <view class="title">火灾逃生指南</view>
     <view class="col">
@@ -25,4 +26,23 @@
       </block>
     </view>
   </view>
+
+  <view class="card">
+    <view class="title">燃气泄漏处理</view>
+    <view class="col">
+      <block wx:for="{{guides.gas}}" wx:key="*this">
+        <text style="margin-bottom: 8rpx;">• {{item}}</text>
+      </block>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">紧急联系电话</view>
+    <view class="col">
+      <block wx:for="{{contacts}}" wx:key="*this">
+        <text style="margin-bottom: 8rpx;">• {{item}}</text>
+      </block>
+    </view>
+  </view>
+
 </view>
