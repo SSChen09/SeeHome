@@ -34,9 +34,9 @@ Page({
     this.setData({ favorites })
   },
   async refresh() {
-    const risk = await api.getDisasterRisk()
     const prefCity = await getCityAuto()
     const city = this.data.selectedCity || prefCity
+    const risk = await api.getDisasterRisk(city)
     const hourly = await api.getHourlyForecast(city)
     const hourlyWithClass = { items: (hourly.items || []).map(it => ({ ...it, riskClass: this.badgeClass(it.risk) })) }
     const trendBars = (hourly.items || []).map(it => ({

@@ -1,16 +1,34 @@
 <nav-bar title="我的" themeClass="{{themeClass}}" accentClass="{{accentClass}}" />
 <view class="container {{themeClass}} {{accentClass}}">
   <view class="card">
-    <view class="title">用户信息</view>
-    <view class="row">
-      <text>昵称</text>
-      <input placeholder="请输入昵称" value="{{profile.nickname}}" bindinput="onNicknameInput" style="flex:1;border:1px solid #ddd;border-radius:8rpx;padding:12rpx;" />
+    <view class="title">👤 用户信息</view>
+    <view class="row" style="align-items:center;">
+      <view class="avatar" style="width:80rpx;height:80rpx;border-radius:50%;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);display:flex;align-items:center;justify-content:center;color:white;font-size:32rpx;">
+        <text>{{profile.nickname ? profile.nickname.charAt(0) : 'U'}}</text>
+      </view>
+      <view style="margin-left:20rpx;flex:1;">
+        <view style="font-size:32rpx;font-weight:bold;">{{profile.nickname || '未设置昵称'}}</view>
+        <view style="font-size:24rpx;color:#666;margin-top:4rpx;">家庭安全守护者</view>
+      </view>
     </view>
-    <view class="row" style="margin-top: 12rpx;">
-      <text>版本</text>
-      <text>{{version}}</text>
+    <view class="row" style="margin-top: 20rpx;">
+      <input placeholder="设置你的昵称" value="{{profile.nickname}}" bindinput="onNicknameInput" style="flex:1;border:1px solid #ddd;border-radius:12rpx;padding:16rpx;font-size:28rpx;" />
+      <button class="btn primary" style="margin-left:12rpx;" bindtap="saveProfile">保存</button>
     </view>
-    <button class="btn primary btn-sm" style="margin-top: 12rpx;" bindtap="saveProfile">保存</button>
+    <view class="row" style="margin-top: 16rpx;justify-content:space-between;">
+      <view>
+        <view style="font-size:24rpx;color:#666;">版本</view>
+        <view style="font-size:28rpx;font-weight:bold;">{{version}}</view>
+      </view>
+      <view>
+        <view style="font-size:24rpx;color:#666;">使用天数</view>
+        <view style="font-size:28rpx;font-weight:bold;">{{usageDays}}天</view>
+      </view>
+      <view>
+        <view style="font-size:24rpx;color:#666;">预警次数</view>
+        <view style="font-size:28rpx;font-weight:bold;">{{warningCount}}次</view>
+      </view>
+    </view>
   </view>
   <view class="card">
     <view class="title">设备管理</view>

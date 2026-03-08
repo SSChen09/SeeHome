@@ -25,6 +25,8 @@ Page({
     newFavCity: '',
     profile: { nickname: '' },
     version: '1.0.0',
+    usageDays: 0,
+    warningCount: 0,
     quietStart: '22:00',
     quietEnd: '07:00',
     thresholdIndices: { rain: 1, typhoon: 1, flood: 1 }
@@ -66,7 +68,37 @@ Page({
       typhoon: this.data.levels.indexOf(thresholds.typhoon),
       flood: this.data.levels.indexOf(thresholds.flood)
     }
-    this.setData({ devices, history, notify, methodIndex, levelIndex, cityPref, themeIndex, accentIndex, themeLabel, accentLabel, themeClass: cls.themeClass, accentClass: cls.accentClass, favorites, profile, quietStart, quietEnd, thresholdIndices })
+    
+    // 计算使用天数
+    const firstUseDate = wx.getStorageSync('first_use_date')
+    let usageDays = 0
+    if (firstUseDate) {
+      const firstDate = new Date(firstUseDate)
+      const today = new Date()
+      const diffTime = Math.abs(today - firstDate)
+      usageDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    } else {
+      // 第一次使用，记录当前日期
+      const today = new Date().toISOString().split('T')[0]
+      wx.setStorageSync('first_use_date', today)
+      usageDays = 1
+    }
+    
+    // 计算预警次数（从历史记录中统计）
+    let warningCount = 0
+    if (history && Array.isArray(history)) {
+      warningCount = history.filter(item => 
+        item.type && item.type.includes('预警')
+      ).length
+    }
+    
+    this.setData({ 
+      devices, history, notify, methodIndex, levelIndex, cityPref, 
+      themeIndex, accentIndex, themeLabel, accentLabel, 
+      themeClass: cls.themeClass, accentClass: cls.accentClass, 
+      favorites, profile, quietStart, quietEnd, thresholdIndices,
+      usageDays, warningCount
+    })
   },
   onDeviceNameInput(e) {
     this.setData({ newDeviceName: e.detail.value })

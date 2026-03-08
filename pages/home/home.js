@@ -43,8 +43,17 @@ Page({
     const favorites = getFavoriteCities()
     this.setData({ favorites })
     
-    // 页面显示时也刷新一次数据
-    this.refresh()
+    // 检查是否需要刷新（距离上次刷新超过1分钟）
+    const now = Date.now()
+    const lastRefresh = this.data.lastRefreshTime ? new Date(this.data.lastRefreshTime).getTime() : 0
+    const shouldRefresh = !this.data.lastRefreshTime || (now - lastRefresh > 60 * 1000)
+    
+    if (shouldRefresh) {
+      console.log('距离上次刷新超过1分钟，自动刷新')
+      this.refresh()
+    } else {
+      console.log('数据仍然新鲜，跳过自动刷新')
+    }
   },
   onHide() {
     this.stopAutoRefresh()
@@ -62,7 +71,7 @@ Page({
       const sensor = await api.getSensorLatest()
       const fireRisk = computeFireRisk(sensor)
       const weather = await api.getWeatherToday(city)
-      const risk = await api.getDisasterRisk()
+      const risk = await api.getDisasterRisk(city)
       const hourly = await api.getHourlyForecast(city)
       const innovation = await api.getLocalInnovationIndices(city)
       const rainBadgeClass = this.badgeClass(risk.rain)

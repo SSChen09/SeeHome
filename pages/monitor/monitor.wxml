@@ -1,5 +1,33 @@
 <nav-bar title="环境监控" themeClass="{{themeClass}}" accentClass="{{accentClass}}" bind:refresh="refresh" bind:settings="goUser" />
 <view class="container {{themeClass}} {{accentClass}}">
+  
+  <!-- 连接状态提示 -->
+  <block wx:if="{{!isConnected}}">
+    <view class="card warning" style="border-left: 8rpx solid #ff9800;">
+      <view class="title" style="color: #ff9800;">⚠️ 监控设备未连接</view>
+      <view class="row" style="margin-top: 12rpx;">
+        <text style="color: #666;">{{connectionError || '请连接监控设备以获取实时数据'}}</text>
+      </view>
+      <view class="row" style="margin-top: 20rpx; justify-content: center;">
+        <button class="btn primary" bindtap="connectDevice" style="width: 200rpx;">连接设备</button>
+        <button class="btn" bindtap="refresh" style="width: 200rpx; margin-left: 20rpx;">刷新状态</button>
+      </view>
+    </view>
+  </block>
+  
+  <block wx:if="{{isConnected}}">
+    <view class="card success" style="border-left: 8rpx solid #4caf50;">
+      <view class="title" style="color: #4caf50;">✅ 监控设备已连接</view>
+      <view class="row" style="margin-top: 12rpx;">
+        <text style="color: #666;">正在接收实时传感器数据</text>
+      </view>
+      <view class="row" style="margin-top: 20rpx; justify-content: center;">
+        <button class="btn warning" bindtap="disconnectDevice" style="width: 200rpx;">断开连接</button>
+        <button class="btn" bindtap="refresh" style="width: 200rpx; margin-left: 20rpx;">刷新数据</button>
+      </view>
+    </view>
+  </block>
+
   <view class="card">
     <view class="title">环境传感数据</view>
     <view class="row">
