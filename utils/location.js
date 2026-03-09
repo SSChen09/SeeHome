@@ -2,9 +2,7 @@ export async function getCityAuto() {
   const pref = wx.getStorageSync('city_pref') || { auto: true, city: '' }
   if (!pref.auto && pref.city) return pref.city
   
-  // 完全使用GPS定位，不依赖IP定位
   try {
-    // 使用微信GPS定位API获取精确位置
     const wxLocation = await getCityByWXLocation()
     if (wxLocation && wxLocation !== '未知城市') {
       wx.setStorageSync('city_pref', { auto: true, city: wxLocation })
@@ -12,7 +10,6 @@ export async function getCityAuto() {
     }
   } catch (e) {
     console.log('GPS定位失败:', e)
-    // GPS定位失败时，给用户友好的提示
     wx.showToast({
       title: '定位失败，使用默认城市',
       icon: 'none',
@@ -20,7 +17,6 @@ export async function getCityAuto() {
     })
   }
   
-  // 使用缓存或默认值
   const finalCity = pref.city || '北京'
   wx.setStorageSync('city_pref', { auto: true, city: finalCity })
   return finalCity

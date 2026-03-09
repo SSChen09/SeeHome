@@ -43,7 +43,6 @@ Page({
     const favorites = getFavoriteCities()
     this.setData({ favorites })
     
-    // 检查是否需要刷新（距离上次刷新超过1分钟）
     const now = Date.now()
     const lastRefresh = this.data.lastRefreshTime ? new Date(this.data.lastRefreshTime).getTime() : 0
     const shouldRefresh = !this.data.lastRefreshTime || (now - lastRefresh > 60 * 1000)

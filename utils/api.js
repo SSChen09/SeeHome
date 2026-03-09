@@ -6,14 +6,9 @@ function randomRange(min, max) {
 
 export async function getSensorLatest() {
   try {
-    // 这里应该调用实际的设备API获取传感器数据
-    // 例如：通过蓝牙、WiFi或HTTP请求获取真实数据
-    
-    // 模拟真实设备连接检查
     const isDeviceConnected = await checkDeviceConnection()
     
     if (!isDeviceConnected) {
-      // 设备未连接，返回全0数据表示未连接状态
       return {
         temperature: 0,
         humidity: 0,
@@ -22,8 +17,6 @@ export async function getSensorLatest() {
       }
     }
     
-    // 设备已连接，获取真实数据
-    // 这里应该替换为实际的设备数据获取逻辑
     const realData = await fetchRealSensorData()
     
     return realData || {
@@ -34,7 +27,6 @@ export async function getSensorLatest() {
     }
   } catch (error) {
     console.error('获取传感器数据失败:', error)
-    // 发生错误时返回全0数据
     return {
       temperature: 0,
       humidity: 0,
@@ -44,28 +36,17 @@ export async function getSensorLatest() {
   }
 }
 
-// 检查设备连接状态（模拟函数，需要根据实际设备实现）
 async function checkDeviceConnection() {
-  // 这里应该实现实际的设备连接检查逻辑
-  // 例如：检查蓝牙连接状态、WiFi连接状态等
-  
-  // 模拟：检查本地存储中是否有设备连接记录
   const deviceInfo = wx.getStorageSync('monitor_device_info')
   return !!deviceInfo && deviceInfo.connected === true
 }
 
-// 获取真实传感器数据（模拟函数，需要根据实际设备实现）
 async function fetchRealSensorData() {
-  // 这里应该实现实际的设备数据获取逻辑
-  // 例如：通过蓝牙特征值读取、HTTP API调用等
-  
-  // 模拟：从本地存储获取模拟的真实数据
   const mockData = wx.getStorageSync('sensor_mock_data')
   if (mockData) {
     return mockData
   }
   
-  // 如果没有模拟数据，返回null表示需要真实设备连接
   return null
 }
 
@@ -506,7 +487,6 @@ async function req(url, retries = 2) {
 }
 
 async function resolveCityCoord(city) {
-  // 扩展城市坐标映射表（更多中国城市）
   const cityCoords = {
     '北京': { lat: 39.9042, lon: 116.4074 },
     '上海': { lat: 31.2304, lon: 121.4737 },
@@ -567,14 +547,12 @@ async function resolveCityCoord(city) {
     '东莞': { lat: 23.0207, lon: 113.7518 }
   }
   
-  // 首先检查本地映射表
-  const normalizedCity = city.replace('市', '').replace('省', '') // 去掉"市"和"省"字
+  const normalizedCity = city.replace('市', '').replace('省', '')
   if (cityCoords[normalizedCity]) {
     console.log(`使用本地坐标映射: ${city} -> ${normalizedCity}`)
     return { lat: cityCoords[normalizedCity].lat, lon: cityCoords[normalizedCity].lon, country: 'China' }
   }
   
-  // 尝试模糊匹配（部分匹配）
   for (const [cityName, coords] of Object.entries(cityCoords)) {
     if (normalizedCity.includes(cityName) || cityName.includes(normalizedCity)) {
       console.log(`模糊匹配成功: ${city} -> ${cityName}`)
@@ -584,7 +562,6 @@ async function resolveCityCoord(city) {
   
   try {
     console.log(`尝试API获取坐标: ${city}`)
-    // 尝试使用API获取坐标（增加超时时间）
     const data = await req(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=zh&format=json`)
     const r = (data && data.results && data.results[0]) ? data.results[0] : null
     if (!r) throw new Error('no-city')
@@ -593,9 +570,8 @@ async function resolveCityCoord(city) {
   } catch (error) {
     console.warn(`无法获取城市坐标 "${city}"，使用备用方案:`, error.message)
     
-    // 备用方案1：使用省份的平均坐标
     const provinceCoords = {
-      '广东': { lat: 23.3790, lon: 113.7633 },  // 广东省平均坐标
+      '广东': { lat: 23.3790, lon: 113.7633 },
       '江苏': { lat: 32.0603, lon: 118.7969 },
       '浙江': { lat: 30.2741, lon: 120.1551 },
       '山东': { lat: 36.6512, lon: 117.1201 },
@@ -607,14 +583,12 @@ async function resolveCityCoord(city) {
       '陕西': { lat: 34.3416, lon: 108.9398 }
     }
     
-    // 检查是否为广东省的城市
     if (city.includes('广东') || city.includes('广州') || city.includes('深圳') || 
         city.includes('佛山') || city.includes('东莞') || city.includes('江门')) {
       console.log(`使用广东省平均坐标: ${city}`)
       return { lat: provinceCoords['广东'].lat, lon: provinceCoords['广东'].lon, country: 'China' }
     }
     
-    // 备用方案2：使用最近的大城市坐标
     console.log(`使用默认坐标（北京）: ${city}`)
     return { lat: 39.9042, lon: 116.4074, country: 'China' }
   }

@@ -13,8 +13,8 @@ Page({
     accentClass: '',
     anomalies: [],
     autoRefresh: false,
-    isConnected: false,  // 监控设备连接状态
-    connectionError: '', // 连接错误信息
+    isConnected: false,
+    connectionError: '',
     charts: {
       temp: [],
       smoke: [],
@@ -43,15 +43,12 @@ Page({
   },
   async refresh() {
     try {
-      // 尝试获取传感器数据
       const sensor = await api.getSensorLatest()
       
-      // 检查是否为模拟数据（所有值都是0）
       const isMockData = sensor.temperature === 0 && sensor.humidity === 0 && 
                          sensor.smoke === 0 && sensor.gas === 0
       
       if (isMockData) {
-        // 没有真实数据，显示连接提示
         this.setData({
           isConnected: false,
           connectionError: '未检测到监控设备连接',
@@ -68,11 +65,9 @@ Page({
         return
       }
       
-      // 有真实数据，正常处理
       const fireRisk = computeFireRisk(sensor)
       const anomalies = detectAnomalies(sensor)
       
-      // 更新图表数据（使用真实数据）
       const charts = this.updateCharts(sensor)
       
       this.setData({
@@ -113,15 +108,12 @@ Page({
   },
   
   updateCharts(sensor) {
-    // 获取当前图表数据
     const currentCharts = this.data.charts || { temp: [], smoke: [], gas: [] }
     
-    // 添加新数据点
     const newTemp = [...currentCharts.temp, sensor.temperature]
     const newSmoke = [...currentCharts.smoke, sensor.smoke]
     const newGas = [...currentCharts.gas, sensor.gas]
     
-    // 限制数据点数量（最多12个）
     const limit = 12
     return {
       temp: newTemp.slice(-limit),
@@ -143,15 +135,12 @@ Page({
     }
   },
   
-  // 手动连接设备
   async connectDevice() {
     wx.showLoading({ title: '连接中...' })
     try {
-      // 使用模拟设备连接（实际项目中应替换为真实设备连接逻辑）
       const result = await api.mockConnectDevice()
       
       if (result.success) {
-        // 连接成功后刷新数据
         await this.refresh()
         wx.showToast({ 
           title: `已连接到${result.deviceInfo.deviceName}`, 
@@ -168,7 +157,6 @@ Page({
     }
   },
   
-  // 断开设备连接
   async disconnectDevice() {
     wx.showLoading({ title: '断开中...' })
     try {
